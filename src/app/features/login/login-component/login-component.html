@@ -1,1 +1,30 @@
-<p>login-component works!</p>
+<section class="login-page">
+    
+    <div class="header">
+        <app-logo-component [size]="'huge'" ></app-logo-component>
+    </div>
+    
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()" >
+        <p>
+            <mat-form-field>
+                <mat-label>Usuário</mat-label>
+                <input formControlName="username" matInput placeholder="ex: usuario123">
+                @if(loginForm.get('username')?.hasError('required')){
+                    <mat-error>Usuário é obrigatório</mat-error>
+                }
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field>
+                <mat-label>Senha</mat-label>
+                <input formControlName="password" matInput placeholder="ex: usuario123">
+                @if(loginForm.get('password')?.hasError('required')){
+                    <mat-error>Senha é obrigatório</mat-error>
+                }
+            </mat-form-field>
+        </p>
+        <button [disabled]="!this.loginForm.valid" type="submit" matButton="outlined">Login</button>
+    </form>
+</section>
+
+

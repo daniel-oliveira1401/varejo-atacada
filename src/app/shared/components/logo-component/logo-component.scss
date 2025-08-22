@@ -1,0 +1,12 @@
+.logo{
+    --size: 120%;
+
+    text-align: center;
+    font-size: var(--size);
+    .ada{
+        color: #A6F750;
+        background-color: rgb(15, 18, 22);
+        padding: 0.25rem;
+        border-radius: 0.35rem;
+    }
+}

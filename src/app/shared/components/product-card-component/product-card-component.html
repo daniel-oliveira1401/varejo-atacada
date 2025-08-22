@@ -1,0 +1,29 @@
+<mat-card [ngClass]="{'hover' : showHover}" [routerLink]="withLink ? ['/product', product.id] : null" class="product-card" appearance="outlined" >
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>{{product.title}} </mat-card-title>
+  </mat-card-header>
+  <div [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
+      <img mat-card-image src="{{product.image}}" alt="Photo of a Shiba Inu">
+  </div>
+  @if (showDescription) {
+    <mat-card-content class="description">
+      {{product.description}}
+    </mat-card-content>
+  }
+  <mat-card-content class="card-body" >
+    <div>
+      <mat-chip class="chip">
+          {{product.category}}
+      </mat-chip>
+    </div>
+    <div class="actions">
+      @if (showAddToKartBtn) {
+        <button matButton="filled">Adicionar ao carrinho</button>
+      }
+      <p class="price">
+        {{product.price | currency: 'BRL'}}
+      </p>
+    </div>
+  </mat-card-content>
+</mat-card>

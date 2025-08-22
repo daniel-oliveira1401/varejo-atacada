@@ -4,6 +4,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { loadingIndicatorInterceptor } from './core/interceptors/loading-indicator-interceptor';
 
 /**
  * Url base para a api que realiza o crud dos produtos e gerenciamento do
@@ -25,8 +28,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingIndicatorInterceptor])),
     provideRouter(routes),
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     {provide: BASE_URL, useValue: 'https://fakestoreapi.com'},
     {provide: AUTH_BASE_URL, useValue: 'https://fakestoreapi.com'},
     {provide: ADMIN_USERNAME, useValue: 'kevinryan'}

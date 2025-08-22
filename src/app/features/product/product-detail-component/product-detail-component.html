@@ -1,1 +1,31 @@
-<p>product-detail-component works!</p>
+<app-navbar-component></app-navbar-component>
+@if (product()) {
+    <div class="body">
+        <section class="details-section">
+            <div class="scroll-wrapper">
+                <app-product-card-component 
+                    [product]="product()!" 
+                    [showHover]="false"
+                    [withLink]="false"
+                    [clampImageSize]="false"
+                    [showDescription]="true"
+                    [showAddToKartBtn]="true">
+                </app-product-card-component>
+            </div>
+        </section>
+        <section class="aside-section">
+            <div class="scroll-wrapper">
+                <aside class="side-column">
+                    @for (product of products(); track product.id) {
+                        <app-product-card-component
+                            [product]="product"
+                        ></app-product-card-component>
+                    }
+                </aside>
+            </div>
+        </section>
+    </div>
+
+}@else {
+
+}

@@ -53,6 +53,9 @@ export const appConfig: ApplicationConfig = {
     //App config
     {provide: BASE_URL, useValue: 'https://fakestoreapi.com'},
     {provide: AUTH_BASE_URL, useValue: 'https://fakestoreapi.com'},
+    // Credenciais de admin (para testes):
+    // username: kevinryan
+    // password: kev02937@
     {provide: ADMIN_USERNAME, useValue: 'kevinryan'}
   ]
 };

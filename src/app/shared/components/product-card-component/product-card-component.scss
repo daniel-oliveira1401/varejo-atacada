@@ -1,4 +1,5 @@
 @use 'responsive' as r;
+@use 'overrides' as o;
 
 .product-card{
     height: 100%;
@@ -54,6 +55,7 @@
         gap: 1rem;
         .actions {
             display: flex;
+            gap: 0.5rem;
             flex-direction: column-reverse;
             
             @include r.after-size(medium){
@@ -72,6 +74,10 @@
                 display: flex;
                 align-items: center;
                 gap: 1rem;
+            }
+
+            .remove{
+                @include o.danger-mat-btn();
             }
         }
     }

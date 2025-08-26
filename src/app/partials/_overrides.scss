@@ -1,0 +1,10 @@
+@use '@angular/material' as mat;
+@use 'app-variables' as vars;
+
+@mixin danger-mat-btn(){
+    @include mat.button-overrides((
+        filled-container-color: vars.$red,
+        filled-label-text-color: vars.$white,
+        filled-ripple-color: vars.$dark-red
+    ));
+}

@@ -10,6 +10,11 @@
             <button class="profile-pic" matIconButton>
                 {{getLoggedInUserInitial()}}
             </button>
+            @if(authService.isAdmin()){
+                <button routerLink="/admin" matIconButton>
+                    <mat-icon>admin_panel_settings</mat-icon>
+                </button>
+            }
             <button (click)="logout()" matIconButton>
                 <mat-icon>logout</mat-icon>
             </button>

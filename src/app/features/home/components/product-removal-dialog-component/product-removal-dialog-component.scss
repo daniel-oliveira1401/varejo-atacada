@@ -1,0 +1,59 @@
+@use 'app-variables' as vars;
+@use "overrides" as o;
+@use 'responsive' as r;
+
+.modal{
+    overflow: hidden;
+    .header{
+        background-color: vars.$red;
+        color: vars.$white;
+        padding: 0.5rem;
+        @include r.after-size(large){
+            padding: 1rem;
+        }
+        
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            h2{
+                font-weight: 500;
+                font-size: 1rem;
+                @include r.after-size(medium){
+                    font-size: 1.5rem;
+                }
+            }
+        }
+
+        .close{
+            color: vars.$white;
+        }
+    }
+    .content {
+        padding: 1rem;
+        overflow: auto;
+
+        .message{
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-container{
+            
+        }
+    }
+
+    .actions{
+        padding: 1rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        .confirm {
+            @include o.danger-mat-btn();
+        }
+        
+    }
+}

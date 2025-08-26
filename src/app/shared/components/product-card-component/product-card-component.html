@@ -1,8 +1,8 @@
-<mat-card [ngClass]="{'hover' : showHover}" [routerLink]="withLink ? ['/product', product.id] : null" class="product-card" appearance="outlined" >
-  <mat-card-header>
+<mat-card [ngClass]="{'hover' : showHover}" class="product-card" appearance="outlined" >
+  <mat-card-header [routerLink]="withLink ? ['/product', product.id] : null" >
     <mat-card-title>{{product.title}} </mat-card-title>
   </mat-card-header>
-  <div [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
+  <div [routerLink]="withLink ? ['/product', product.id] : null" [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
       <img mat-card-image src="{{product.image}}" alt="Product image for {{product.title}}">
   </div>
   @if (showDescription) {
@@ -17,8 +17,8 @@
       </mat-chip>
     </div>
     <div class="actions">
-      @if (showAddToCartBtn || showRemoveFromCartBtn) {
-        <div class="add-to-cart" >
+      @if (showAddToCartBtn || showRemoveProductBtn) {
+        <div class="add-to-cart">
           @if(loading()){
             <mat-spinner [diameter]="24" class="spinner"></mat-spinner>
           }
@@ -28,8 +28,8 @@
               Adicionar ao carrinho
             </button>
           }
-          @if (showRemoveFromCartBtn) {
-            <button (click)="triggerRemoveFromCartEvent()" matButton="filled">Remover do carrinho</button>
+          @if (showRemoveProductBtn) {
+            <button class="remove" (click)="triggerRemoveProductEvent()" matButton="filled">Remover</button>
           }
         </div>
       }

@@ -27,13 +27,14 @@ import { MatIconModule } from '@angular/material/icon';
 export class ProductCardComponent {
   @Input({required : true}) product! : Product;
   @Input() showAddToCartBtn : boolean = false;
-  @Input() showRemoveFromCartBtn : boolean = false;
+  @Input() showRemoveProductBtn : boolean = false;
   @Input() showDescription : boolean = false;
   @Input() withLink : boolean = true;
   @Input() showHover : boolean = true;
   @Input() clampImageSize : boolean = true;
   
   @Output() addToCart : EventEmitter<CompletableEvent<Product>> = new EventEmitter<CompletableEvent<Product>>(); 
+  @Output() removeProduct : EventEmitter<CompletableEvent<Product>> = new EventEmitter<CompletableEvent<Product>>(); 
 
   readonly loading = signal(false);
 
@@ -48,14 +49,15 @@ export class ProductCardComponent {
     this.addToCart.emit(addToCartEvent);
   }
 
-  triggerRemoveFromCartEvent(){
+  triggerRemoveProductEvent(){
     
     this.loading.set(true);
     
-    const removeFromCartEvent =  new CompletableEvent(this.product, (result)=> {
+    const removeProductEvent =  new CompletableEvent(this.product, (result)=> {
       this.loading.set(false);
     });
 
-    this.addToCart.emit(removeFromCartEvent);
+    this.removeProduct.emit(removeProductEvent);
   }
+
 }

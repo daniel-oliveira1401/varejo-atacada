@@ -1,6 +1,6 @@
 <app-navbar-component></app-navbar-component>
 <div class="product-display">
     @for (product of products(); track product.id) {
-        <app-product-card-component [product]="product"></app-product-card-component>
+        <app-product-card-component (removeProduct)="removeProduct($event)" [showRemoveProductBtn]="admin" [product]="product"></app-product-card-component>
     }
 </div>

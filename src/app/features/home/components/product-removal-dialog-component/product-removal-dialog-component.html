@@ -1,0 +1,33 @@
+<mat-card class="modal">
+    <mat-card-header class="header">
+        <div class="title">
+            <mat-icon>
+                delete
+            </mat-icon>
+            <h2>
+                Remover produto
+            </h2>
+        </div>
+        <div>
+            <button (click)="cancel()" class="close" matIconButton>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </mat-card-header>
+    <mat-card-content class="content" >
+        <h1 class="message" >
+            Tem certeza que deseja remover da loja o produto abaixo?
+        </h1>
+        <div class="product-container">
+            <app-product-card-component
+                [showHover]="false"
+                [withLink]="false"
+                [product]="product"
+            ></app-product-card-component>
+        </div>
+    </mat-card-content>
+    <div class="actions" >
+        <button (click)="cancel()" class="confirm" matButton>Cancelar</button>
+        <button (click)="confirm()" class="confirm" matButton="filled">Remover produto</button>
+    </div>
+</mat-card>

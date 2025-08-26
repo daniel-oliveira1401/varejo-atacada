@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Product } from '../../shared/models/product';
 import { UpdateCartRequest } from '../../shared/models/api/update-cart-request';
 import { AuthService } from './auth-service';
 import { BASE_URL } from '../../app.config';
+import { catchError, map, of } from 'rxjs';
+import { ProductGroup } from '../../shared/models/product-group';
 
 /**
  * Este service utiliza a prática conhecida como "Atualizações Otimistas (Optimistic Updates)" 
@@ -26,10 +28,27 @@ export class CartService {
     @Inject(BASE_URL) private readonly baseUrl : string
   ){}
 
-  private cartProducts : WritableSignal<Product[]> = signal([]);
+  private readonly cartProducts : WritableSignal<Product[]> = signal([]);
+  private readonly totalCost = computed(() => {
+    return this.cartProducts().reduce((cost, produto)=> {
+      return cost += produto.price;
+    }, 0);
+  });
+
+  getTotalCost(){
+    return this.totalCost();
+  }
 
   getCartProducts(){
     return this.cartProducts.asReadonly();
+  }
+
+  hasItemsInCart(){
+    return this.cartProducts().length > 0;
+  }
+
+  getCartItemsCount(){
+    return this.cartProducts().length;
   }
 
   addToCart(product : Product){
@@ -40,7 +59,15 @@ export class CartService {
 
     this.cartProducts.set(productsAfterUpdate);
     
-    this.updateCart(productsAfterUpdate, productsBeforeUpdate);
+    return this.updateCart(productsAfterUpdate, productsBeforeUpdate);
+  }
+
+  increaseCount(productGroup : ProductGroup){
+    this.addToCart(productGroup.product).subscribe({
+      next: (result)=>{
+        productGroup.increaseCount();
+      }
+    });
   }
 
   removeFromCart(productId : number){
@@ -51,7 +78,17 @@ export class CartService {
     
     this.cartProducts.set(productsAfterRemoval);
 
-    this.updateCart(productsAfterRemoval, productsBeforeRemoval);
+    return this.updateCart(productsAfterRemoval, productsBeforeRemoval);
+  }
+
+  decreaseCount(productGroup : ProductGroup){
+    
+    this.removeFromCart(productGroup.product.id).subscribe({
+      next: (result)=>{
+        productGroup.decreaseCount();
+      }
+    });
+
   }
 
   private updateCart(desiredState : Product[], previousState : Product[]){
@@ -68,12 +105,16 @@ export class CartService {
     );
     
     // numero do carrinho não importa por conta de que a API não faz persistência
-    this.httpClient.put(this.baseUrl + "/carts/1", request).subscribe({
-      error: (error)=>{
+    return this.httpClient.put(this.baseUrl + "/carts/1", request).pipe(
+      map(r => true),
+      catchError((error) => {
+        
         console.error("Não foi possível atualizar o carrinho", error);
         //reverter a atualização otimista caso a operação falhe
         this.cartProducts.set(previousState);
-      }
-    });
+        
+        return of(false);
+      })
+    );
   }
 }

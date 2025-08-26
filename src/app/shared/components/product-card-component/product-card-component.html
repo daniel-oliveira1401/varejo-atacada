@@ -1,10 +1,9 @@
 <mat-card [ngClass]="{'hover' : showHover}" [routerLink]="withLink ? ['/product', product.id] : null" class="product-card" appearance="outlined" >
   <mat-card-header>
-    <div mat-card-avatar class="example-header-image"></div>
     <mat-card-title>{{product.title}} </mat-card-title>
   </mat-card-header>
   <div [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
-      <img mat-card-image src="{{product.image}}" alt="Photo of a Shiba Inu">
+      <img mat-card-image src="{{product.image}}" alt="Product image for {{product.title}}">
   </div>
   @if (showDescription) {
     <mat-card-content class="description">
@@ -18,8 +17,21 @@
       </mat-chip>
     </div>
     <div class="actions">
-      @if (showAddToKartBtn) {
-        <button matButton="filled">Adicionar ao carrinho</button>
+      @if (showAddToCartBtn || showRemoveFromCartBtn) {
+        <div class="add-to-cart" >
+          @if(loading()){
+            <mat-spinner [diameter]="24" class="spinner"></mat-spinner>
+          }
+          @if (showAddToCartBtn) {
+            <button (click)="triggerAddToCartEvent()" matButton="filled">
+              <mat-icon>shopping_cart</mat-icon>
+              Adicionar ao carrinho
+            </button>
+          }
+          @if (showRemoveFromCartBtn) {
+            <button (click)="triggerRemoveFromCartEvent()" matButton="filled">Remover do carrinho</button>
+          }
+        </div>
       }
       <p class="price">
         {{product.price | currency: 'BRL'}}

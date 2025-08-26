@@ -1,0 +1,26 @@
+<mat-card class="card" appearance="outlined">
+    
+    <div class="header">
+        <div class="img">
+            <img src="{{getProductImage()}}" alt="{{getProductDescription()}}">
+        </div>
+        <div class="body">
+            <h3 class="title">{{getProductTitle()}}</h3>
+            <p class="price">{{getTotalCostForProducts() | currency}}</p>
+            <mat-chip>{{getProductCategory()}}</mat-chip>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="inc-dec">
+            <button (click)="triggerIncreaseCountEvent()" matIconButton>
+                <mat-icon>add</mat-icon>
+            </button>
+            <p class="amount">{{getProductAmount()}}</p>
+            <button (click)="triggerDecreaseCountEvent()" matIconButton>
+                <mat-icon>remove</mat-icon>
+            </button>
+        </div>
+        <button matButton (click)="triggerRemoveFromCart()">Remover</button>
+    </div>
+    
+</mat-card>

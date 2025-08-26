@@ -1,3 +1,5 @@
+@use 'responsive' as r;
+
 :host {
     display: flex;
     flex-direction: column;
@@ -5,33 +7,57 @@
     height: 100vh;
     overflow: auto;
 }
+
 .body {
     flex-grow: 1;
-    display: grid;
-    grid-template-columns: 7fr 3fr;
-    gap: 1rem;
     padding: 1rem;
+    @include r.after-size(large){
+        display: grid;
+        grid-template-columns: 5fr 3fr;
+    }
+    
+    gap: 1rem;
+
+    .center-content{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+    }
 
     .details-section{
-        .scroll-wrapper {
-            height: 100%;
-            // display: flex;
-            // align-items: center;
-            // justify-content: center;
-        }
+        
     }
 
     .aside-section{
-        position: relative;
-        .scroll-wrapper{
-            position: absolute;
-            inset: 0;
-            overflow: auto;
-            .side-column{
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
+
+        .side-column{
+                    
+            .title {
+                text-align: center;
+                position: sticky;
+                top: 0;
+                background-color: white;
+                z-index: 5;
+                padding-block: 1rem;
+            }
+
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @include r.after-size(large){
+            position: relative;
+            .scroll-wrapper{
+                position: absolute;
+                inset: 0;
+                overflow: auto;
             }
         }
+        
     }
 }

@@ -1,1 +1,36 @@
 <app-navbar-component></app-navbar-component>
+<section class="body">
+    <h1 class="title">Carrinho de Compras</h1>
+    @if(productGroups().length > 0){
+        <div class="content" >
+            <article class="items">
+            
+                @for (productGroup of productGroups(); track productGroup.product.id) {
+                    <app-cart-product-card-component
+                        [productGroup]="productGroup"
+                        (increaseCount)="increaseCount($event)"
+                        (decreaseCount)="decreaseCount($event)"
+                        (removeFromCart)="removeFromCart($event)"
+                    ></app-cart-product-card-component>
+                }
+            </article>
+            <mat-card class="summary" appearance="outlined" >
+                <div class="total" >
+                    <p>Total</p>
+                    <p class="value">{{cartService.getTotalCost() | currency}}</p>
+                </div>
+                <div class="buy" >
+                    <button matButton="filled">
+                        Comprar
+                    </button>
+                </div>
+            </mat-card>
+        </div>
+    }@else {
+        <div class="empty">
+            <h2 class="title">O carrinho está vazio &colon;&lpar; </h2>
+            <button routerLink="/" matButton="filled">Voltar para página inicial</button>
+        </div>
+    }
+    
+</section>

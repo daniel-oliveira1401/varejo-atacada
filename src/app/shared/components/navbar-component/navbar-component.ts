@@ -5,6 +5,8 @@ import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 import { LogoComponent } from "../logo-component/logo-component";
+import { CartService } from '../../../core/services/cart-service';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @Component({
   selector: 'app-navbar-component',
@@ -12,6 +14,7 @@ import { LogoComponent } from "../logo-component/logo-component";
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    MatBadgeModule,
     RouterModule,
     LogoComponent
 ],
@@ -21,6 +24,8 @@ import { LogoComponent } from "../logo-component/logo-component";
 export class NavbarComponent {
 
   readonly authService = inject(AuthService);
+  readonly cartService = inject(CartService);
+
   userIsLoggedIn = this.authService.userIsLoggedIn();
 
   getLoggedInUserInitial(){

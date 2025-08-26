@@ -1,0 +1,13 @@
+@mixin after-size($breakpoint){
+
+    @if($breakpoint == medium){
+        @media screen and (min-width: 600px){
+            @content;
+        }
+    }@else if($breakpoint == large){
+        @media screen and (min-width : 900px) {
+            @content;
+        }
+    }
+
+}

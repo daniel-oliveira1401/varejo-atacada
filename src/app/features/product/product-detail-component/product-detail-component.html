@@ -1,31 +1,40 @@
 <app-navbar-component></app-navbar-component>
-@if (product()) {
-    <div class="body">
-        <section class="details-section">
-            <div class="scroll-wrapper">
-                <app-product-card-component 
-                    [product]="product()!" 
-                    [showHover]="false"
-                    [withLink]="false"
-                    [clampImageSize]="false"
-                    [showDescription]="true"
-                    [showAddToKartBtn]="true">
-                </app-product-card-component>
-            </div>
-        </section>
-        <section class="aside-section">
-            <div class="scroll-wrapper">
-                <aside class="side-column">
-                    @for (product of products(); track product.id) {
-                        <app-product-card-component
-                            [product]="product"
-                        ></app-product-card-component>
-                    }
-                </aside>
-            </div>
-        </section>
-    </div>
 
-}@else {
-
-}
+<div class="body">
+    <section class="details-section">
+        @if(product()){
+            <app-product-card-component 
+                [product]="product()!" 
+                [showHover]="false"
+                [withLink]="false"
+                [clampImageSize]="false"
+                [showDescription]="true"
+                [showAddToCartBtn]="true"
+                (addToCart)="addToCart($event)"
+            ></app-product-card-component>
+        }@else {
+            @if(notFound()){
+                <div class="center-content">
+                    <h1>Produto não encontrado.</h1>
+                    <button routerLink="/" matButton="filled">Voltar para página inicial</button>
+                </div>
+            }@else {
+                <div class="center-content">
+                    <mat-spinner></mat-spinner>
+                </div>
+            }
+        }
+    </section>
+    <section class="aside-section">
+        <div class="scroll-wrapper">
+            <aside class="side-column">
+                <h2 class="title">Outros produtos</h2>
+                @for (product of products(); track product.id) {
+                    <app-product-card-component
+                        [product]="product"
+                    ></app-product-card-component>
+                }
+            </aside>
+        </div>
+    </section>
+</div>

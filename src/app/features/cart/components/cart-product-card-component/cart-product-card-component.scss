@@ -1,0 +1,56 @@
+@use 'responsive' as r;
+
+.card{
+    display: flex;
+    flex-direction: column;
+
+    @include r.after-size(large){
+        flex-direction: row;
+    }
+
+    padding: 1rem;
+    gap: 1rem;
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        @include r.after-size(medium){
+            flex-direction: row;
+        }
+        align-items: center;
+        gap: 1rem;
+
+        .img{
+            max-width: 120px;
+
+            img{
+                max-width: 100%;
+            }
+        }
+    
+        .body {
+            .price{
+                color: green;
+            }
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 2rem;
+        .inc-dec {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            .amount{
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.5rem;
+                border: 1px solid rgba($color: #000000, $alpha: 0.25);
+            }
+        }
+    }
+
+}

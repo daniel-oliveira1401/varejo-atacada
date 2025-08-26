@@ -3,7 +3,7 @@
         <app-logo-component routerLink="/home" [size]="'medium'"></app-logo-component>
     </button>
     <div class="actions items-center flex">
-        <button routerLink="/cart" matIconButton>
+        <button [matBadgeHidden]="!cartService.hasItemsInCart()" [matBadge]="cartService.getCartItemsCount()" routerLink="/cart" matIconButton>
             <mat-icon>shopping_cart</mat-icon>
         </button>
         @if(userIsLoggedIn()){

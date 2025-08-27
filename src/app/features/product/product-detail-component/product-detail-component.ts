@@ -1,6 +1,6 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { NavbarComponent } from '../../../shared/components/navbar-component/navbar-component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product-service';
 import { Product } from '../../../shared/models/product';
 import { ProductCardComponent } from "../../../shared/components/product-card-component/product-card-component";
@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subscription } from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { CompletableEvent } from '../../../shared/events/completable-event';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-product-detail-component',
@@ -24,18 +25,23 @@ import { CompletableEvent } from '../../../shared/events/completable-event';
   styleUrl: './product-detail-component.scss'
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
-  route = inject(ActivatedRoute);
-  productService = inject(ProductService);
-  cartService = inject(CartService);
-  product : WritableSignal<Product | undefined> = signal(undefined);
-  products = computed(() => {
+  readonly route = inject(ActivatedRoute);
+  readonly router = inject(Router);
+  readonly productService = inject(ProductService);
+  readonly cartService = inject(CartService);
+  readonly authService = inject(AuthService);
+  readonly userIsLoggedIn = this.authService.userIsLoggedIn();
+  readonly product : WritableSignal<Product | undefined> = signal(undefined);
+  readonly products = computed(() => {
     const allProducts = this.productService.getProducts()();
     return allProducts.filter(p => p.id != this.product()?.id);
   });
   
-  notFound = signal(false);
+  readonly notFound = signal(false);
+  readonly snackbarService = inject(MatSnackBar);
+  readonly component : ElementRef<HTMLElement> = inject(ElementRef);
+
   routeParamsSubscription : Subscription | undefined;
-  snackbarService = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.routeParamsSubscription = this.route.params.subscribe({
@@ -50,12 +56,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
               // Eles retornarm apenas um product 'null'
               if(product){
                 this.product.set(product);
+                this.component.nativeElement.scrollTo({top: 0, left: 0, behavior: 'smooth'});
               }else{
                 this.notFound.set(true);
               }
             },
             error(err) {
-              console.log("Couldn't find product with id ", productId, err);
+              console.error("Não foi possível encontrar o produto com id ", productId, err);
             },
           })
         }
@@ -68,19 +75,28 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   addToCart(productEvent : CompletableEvent<Product>){
-    let p = new Promise<Product>((resolve, reject)=> resolve({} as Product));
-    
-    this.cartService.addToCart(productEvent.eventData).subscribe({
-      next: (success) => {
-        if(success){
-          this.snackbarService.open(`Adicionado ao carrinho.`);
-        }else{
-          this.snackbarService.open(`Não foi possível adicionar ao carrinho.`);
+    if(this.userIsLoggedIn()){
+      this.cartService.addToCart(productEvent.eventData).subscribe({
+        next: (success) => {
+          if(success){
+            this.snackbarService.open(`Adicionado ao carrinho.`);
+          }else{
+            this.snackbarService.open(`Não foi possível adicionar ao carrinho.`);
+          }
+          
+          productEvent.complete(true);
         }
-        
-        productEvent.complete(true);
-      }
-    });
+      });
+    }else{
+      productEvent.complete(true);
+
+      this.router.navigate(["/login"], {
+        queryParams: {
+          redirectUri : `/product/`+productEvent.eventData.id
+        }
+      });
+
+    }
   }
 
   ngOnDestroy(): void {

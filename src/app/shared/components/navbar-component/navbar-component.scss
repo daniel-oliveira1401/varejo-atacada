@@ -1,3 +1,5 @@
+@use 'responsive' as r;
+
 .navbar{
     position: sticky;
     top: 0;
@@ -15,9 +17,12 @@
         }
     }
     .actions{
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        display: none;
+        @include r.after-size(medium){
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
         .profile-pic{
             border-radius: 50%;
@@ -28,5 +33,18 @@
         }
 
     }
+
+    .actions-mobile{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        @include r.after-size(medium){
+            display: none;
+        }
+        
+    }
+
+    
     
 }
+

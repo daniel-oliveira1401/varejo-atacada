@@ -18,16 +18,8 @@ export class CartProductCardComponent {
 
   @Output() increaseCount : EventEmitter<ProductGroup> = new EventEmitter();
   @Output() decreaseCount : EventEmitter<ProductGroup> = new EventEmitter();
-  @Output() removeFromCart : EventEmitter<ProductGroup> = new EventEmitter();
-
-  /*
-
-  TODO: fix bug where if there are multiple items of the same in the cart and you
-  click to decrease the count it removes all items instead of just one item
-
-
-  */
-
+  @Output() removeAllFromCart : EventEmitter<ProductGroup> = new EventEmitter();
+  @Output() removeOneFromCart : EventEmitter<ProductGroup> = new EventEmitter();
 
   getTotalCostForProducts(){
     return this.productGroup.product.price * this.productGroup.count;
@@ -62,7 +54,11 @@ export class CartProductCardComponent {
   }
 
   triggerRemoveFromCart(){
-    this.removeFromCart.emit(this.productGroup);
+    this.removeAllFromCart.emit(this.productGroup);
+  }
+
+  triggerRemoveOneFromCart(){
+    this.removeOneFromCart.emit(this.productGroup);
   }
 
 }

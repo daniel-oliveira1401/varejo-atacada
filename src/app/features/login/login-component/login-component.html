@@ -1,30 +1,45 @@
 <section class="login-page">
-    
-    <div class="header">
-        <app-logo-component [size]="'huge'" ></app-logo-component>
-    </div>
-    
-    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()" >
-        <p>
-            <mat-form-field>
-                <mat-label>Usuário</mat-label>
-                <input formControlName="username" matInput placeholder="ex: usuario123">
-                @if(loginForm.get('username')?.hasError('required')){
-                    <mat-error>Usuário é obrigatório</mat-error>
+    <mat-card class="card" appearance="outlined" >
+        <header class="header">
+            
+            <app-logo-component routerLink="/home" [size]="'huge'" ></app-logo-component>
+            
+        </header>
+        
+        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()" >
+            @if(loginFailed()){
+                <div class="login-failed">
+                    <p>Usuário e/ou senha incorreto(s).</p>
+                </div>
+            }
+            <p>
+                <mat-form-field>
+                    <mat-label>Usuário</mat-label>
+                    <input type="text" formControlName="username" matInput placeholder="ex: usuario123">
+                    @if(loginForm.get('username')?.hasError('required')){
+                        <mat-error>Usuário é obrigatório</mat-error>
+                    }
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field>
+                    <mat-label>Senha</mat-label>
+                    <input type="password" formControlName="password" matInput placeholder="ex: usuario123">
+                    @if(loginForm.get('password')?.hasError('required')){
+                        <mat-error>Senha é obrigatório</mat-error>
+                    }
+                </mat-form-field>
+            </p>
+            <div class="actions">
+                @if(loading()){
+                    <mat-spinner diameter="24"></mat-spinner>
                 }
-            </mat-form-field>
-        </p>
-        <p>
-            <mat-form-field>
-                <mat-label>Senha</mat-label>
-                <input formControlName="password" matInput placeholder="ex: usuario123">
-                @if(loginForm.get('password')?.hasError('required')){
-                    <mat-error>Senha é obrigatório</mat-error>
-                }
-            </mat-form-field>
-        </p>
-        <button [disabled]="!this.loginForm.valid" type="submit" matButton="outlined">Login</button>
-    </form>
+                <button [disabled]="!this.loginForm.valid" type="submit" matButton="filled">Login</button>
+            </div>
+            
+        </form>
+    </mat-card>
+    
 </section>
 
 

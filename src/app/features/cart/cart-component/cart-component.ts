@@ -46,8 +46,16 @@ export class CartComponent {
     this.cartService.decreaseCount(productGroup);
   }
 
-  removeFromCart(productGroup : ProductGroup){
-    this.cartService.removeFromCart(productGroup.product.id).subscribe({
+  removeAllFromCart(productGroup : ProductGroup){
+    this.cartService.removeAllFromCart(productGroup.product.id).subscribe({
+      next: ()=>{
+        this.snackbar.open('Removido do carrinho');
+      }
+    });
+  }
+
+  removeOneFromCart(productGroup: ProductGroup){
+    this.cartService.removeOneFromCart(productGroup.product.id).subscribe({
       next: ()=>{
         this.snackbar.open('Removido do carrinho');
       }

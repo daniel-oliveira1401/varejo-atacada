@@ -1,6 +1,52 @@
+@use 'responsive' as r;
+
 .product-display{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
     padding: 2rem;
+}
+.hero{
+    padding: 2rem;
+    padding-bottom: 0;
+    @include r.after-size(medium){
+        height: clamp(200px, 50vh, 800px);
+    }
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        @include r.after-size(medium){
+            gap: 4rem;
+        }
+        max-width: 850px;
+    }
+    .title{
+        text-align: center;
+        line-height: 120%;
+        font-size: 2rem;
+        @include r.after-size(medium){
+            font-size: 4.5rem;
+            font-weight: 500;
+            line-height: 120%;
+        }
+        .name {
+            color: rebeccapurple;
+        }
+    }
+
+    .search{
+        width: 100%;
+        @include r.after-size(medium){
+            width: 70%;
+        }
+    }
 }

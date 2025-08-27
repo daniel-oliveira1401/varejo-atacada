@@ -2,13 +2,13 @@
     <button matButton>
         <app-logo-component routerLink="/home" [size]="'medium'"></app-logo-component>
     </button>
-    <div class="actions items-center flex">
+    <div class="actions">
         <button [matBadgeHidden]="!cartService.hasItemsInCart()" [matBadge]="cartService.getCartItemsCount()" routerLink="/cart" matIconButton>
             <mat-icon>shopping_cart</mat-icon>
         </button>
         @if(userIsLoggedIn()){
             <button class="profile-pic" matIconButton>
-                {{getLoggedInUserInitial()}}
+                {{authService.getLoggedInUserInitial()}}
             </button>
             @if(authService.isAdmin()){
                 <button routerLink="/admin" matIconButton>
@@ -23,5 +23,37 @@
                 <mat-icon>login</mat-icon>
             </button>
         }
+    </div>
+    <div class="actions-mobile">
+        <button [matBadgeHidden]="!cartService.hasItemsInCart()" [matBadge]="cartService.getCartItemsCount()" routerLink="/cart" matIconButton>
+            <mat-icon>shopping_cart</mat-icon>
+        </button>
+        <button matIconButton [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <mat-menu class="menu" #menu="matMenu">
+
+            @if(userIsLoggedIn()){
+                <button class="profile-pic" mat-menu-item>
+                    <span class="name" >{{authService.getLoggedInUsername()}}</span>
+                </button>
+                @if(authService.isAdmin()){
+                    <button routerLink="/admin" mat-menu-item>
+                        <mat-icon>admin_panel_settings</mat-icon>
+                        Administração
+                    </button>
+                }
+                <button (click)="logout()" mat-menu-item>
+                    <mat-icon>logout</mat-icon>
+                    Logout
+                </button>
+            }@else {
+                <button routerLink="/login" mat-menu-item>
+                    <mat-icon>login</mat-icon>
+                    Login
+                </button>
+            }
+        </mat-menu>
     </div>
 </mat-toolbar>

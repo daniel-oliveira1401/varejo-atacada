@@ -1,8 +1,8 @@
-<mat-card [ngClass]="{'hover' : showHover}" class="product-card" appearance="outlined" >
-  <mat-card-header [routerLink]="withLink ? ['/product', product.id] : null" >
+<mat-card [routerLink]="withLink ? ['/product', product.id] : null" [ngClass]="{'hover' : showHover}" class="product-card" appearance="outlined" >
+  <mat-card-header >
     <mat-card-title>{{product.title}} </mat-card-title>
   </mat-card-header>
-  <div [routerLink]="withLink ? ['/product', product.id] : null" [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
+  <div  [ngClass]="{'clamp-img-size': clampImageSize}" class="img-container">
       <img mat-card-image src="{{product.image}}" alt="Product image for {{product.title}}">
   </div>
   @if (showDescription) {
@@ -18,7 +18,13 @@
     </div>
     <div class="actions">
       @if (showAddToCartBtn || showRemoveProductBtn) {
-        <div class="add-to-cart">
+        <!-- 
+        
+          $event.stopPropagation() é para evitar que um click em uma das ações abaixo
+          cause a ativação do routerLink do card por conta do event bubbling do javascript
+          
+        -->
+        <div class="add-to-cart" (click)="$event.stopPropagation()">
           @if(loading()){
             <mat-spinner [diameter]="24" class="spinner"></mat-spinner>
           }

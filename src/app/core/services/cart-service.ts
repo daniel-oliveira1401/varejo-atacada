@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, Inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, effect, inject, Inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Product } from '../../shared/models/product';
 import { UpdateCartRequest } from '../../shared/models/api/update-cart-request';
 import { AuthService } from './auth-service';
@@ -22,18 +22,39 @@ import { ProductGroup } from '../../shared/models/product-group';
   providedIn: 'root'
 })
 export class CartService {
-  constructor(
-    private readonly httpClient : HttpClient,
-    private readonly authService : AuthService,
-    @Inject(BASE_URL) private readonly baseUrl : string
-  ){}
-
+  readonly httpClient = inject(HttpClient);
+  readonly authService = inject(AuthService);
+  readonly baseUrl : string = inject(BASE_URL);
   private readonly cartProducts : WritableSignal<Product[]> = signal([]);
   private readonly totalCost = computed(() => {
     return this.cartProducts().reduce((cost, produto)=> {
       return cost += produto.price;
     }, 0);
   });
+
+  constructor(){
+    effect(()=>{
+      /*
+      
+      lição aprendida: sempre usar if(signal === true) and invés
+      de if(signal) em métodos que retornam signals
+
+      Motivo? Pode ser que o desenvolvedor esqueça que está
+      recebendo um signal da função e acabe escrevendo um if
+      que verifica se o signal existe( if(signal()) ) ao invés de 
+      um if que lê o valor do signal ( if(signal()()) ) . Isso importa por 
+      conta de que o angular só faz tracking de 
+      signals que tiveram seu valor *lido* dentro de um effect.
+
+      Usando o === (ou ==) faz a IDE gritar se o erro acima for cometido,
+      evitando alguns bons minutos de debug
+      
+      */
+      if(!this.authService.userIsLoggedIn()() === true){
+        this.cartProducts.set([]);
+      }
+    });
+  }
 
   getTotalCost(){
     return this.totalCost();
@@ -70,7 +91,7 @@ export class CartService {
     });
   }
 
-  removeFromCart(productId : number){
+  removeAllFromCart(productId : number){
     
     const productsBeforeRemoval = [...this.cartProducts()];
     
@@ -81,9 +102,28 @@ export class CartService {
     return this.updateCart(productsAfterRemoval, productsBeforeRemoval);
   }
 
+  removeOneFromCart(productId : number){
+    const productsBeforeRemoval = [...this.cartProducts()];
+    
+    const productsAfterRemoval = [...this.cartProducts()];
+    const length = this.cartProducts().length;
+    
+    for(let i = 0; i < length; i++){
+      const product = this.cartProducts()[i];
+      if(product.id == productId){
+        productsAfterRemoval.splice(i,1);
+        break;
+      }
+    }
+    
+    this.cartProducts.set(productsAfterRemoval);
+
+    return this.updateCart(productsAfterRemoval, productsBeforeRemoval);
+  }
+
   decreaseCount(productGroup : ProductGroup){
     
-    this.removeFromCart(productGroup.product.id).subscribe({
+    this.removeOneFromCart(productGroup.product.id).subscribe({
       next: (result)=>{
         productGroup.decreaseCount();
       }

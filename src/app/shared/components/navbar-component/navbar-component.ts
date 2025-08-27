@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth-service';
 import { LogoComponent } from "../logo-component/logo-component";
 import { CartService } from '../../../core/services/cart-service';
 import {MatBadgeModule} from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-navbar-component',
@@ -15,6 +16,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatIconModule,
     MatButtonModule,
     MatBadgeModule,
+    MatMenuModule,
     RouterModule,
     LogoComponent
 ],
@@ -27,15 +29,6 @@ export class NavbarComponent {
   readonly cartService = inject(CartService);
 
   userIsLoggedIn = this.authService.userIsLoggedIn();
-
-  getLoggedInUserInitial(){
-    const user = this.authService.getLoggedInUser();
-
-    if(user)
-      return user.username.at(0)!.toUpperCase();
-
-    return '?';
-  }
 
   logout(){
     this.authService.logout();

@@ -5,7 +5,7 @@ import { LoginResponse } from '../../shared/models/api/login-response';
 import { Router } from '@angular/router';
 import { User } from '../../shared/models/user';
 import { ADMIN_USERNAME, AUTH_BASE_URL } from '../../app.config';
-import { delay } from 'rxjs';
+import { catchError, delay, of, tap } from 'rxjs';
 
 type TokenPayload = {
   sub: number,
@@ -26,6 +26,23 @@ export class AuthService {
     @Inject(AUTH_BASE_URL) private readonly baseUrl : string,
     @Inject(ADMIN_USERNAME) private readonly adminUsername : string
   ){}
+
+  getLoggedInUsername(){
+    const user = this.getLoggedInUser();
+    if(user)
+      return user.username;
+
+    return '';
+  }
+
+  getLoggedInUserInitial(){
+    const user = this.getLoggedInUser();
+
+    if(user)
+      return user.username.at(0)!.toUpperCase();
+
+    return '?';
+  }
 
   isAdmin(){
     const user = this.getLoggedInUser();
@@ -57,21 +74,23 @@ export class AuthService {
 
   login(username : string, password : string){
 
-    this.httpClient.post<LoginResponse>(this.baseUrl + "/auth/login", new LoginRequest(username, password)).subscribe({
-      next: (res)=>{
-        
-        this.setToken(res.token);
+    return this.httpClient.post<LoginResponse>(
+      this.baseUrl + "/auth/login", 
+      new LoginRequest(username, password)
+    ).pipe(
+      tap({
+        next: (res) => {
+      
+          this.setToken(res.token);
 
-        this.isLoggedIn.set(true);
-
-        this.router.navigate(["/home"]);
-
-      },
-      error: (error)=>{
-        console.error('Não foi possível fazer login');
-      }
-    })
-    
+          this.isLoggedIn.set(true);
+      
+        },
+        error: (error) => {
+          console.error('Não foi possível fazer login');
+        }
+      })
+    );
   }
 
   logout(){
